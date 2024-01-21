@@ -24,6 +24,8 @@ load_dotenv()
 client_id = os.getenv("CLIENT_ID")
 client_secret = os.getenv("CLIENT_SECRET")
 print(client_id,client_secret)
+redirect_uri = "http://127.0.0.1:5000/callback"
+# redirect_uri = "https://kexin76.github.io/Spotify-API-testing/callback"
 
 def getProfile(accessToken):
     headers = get_auth_token(accessToken)
@@ -35,7 +37,7 @@ def getProfile(accessToken):
     
 @app.route('/')
 def index():
-    return "testing"
+    redirect('/login')
 
 @app.route('/callback')
 def callback():
@@ -49,7 +51,6 @@ def callback():
         'Authorization': 'Basic ' + auth_base64,
         'Content-Type': "application/x-www-form-urlencoded"
     }
-    redirect_uri = "http://127.0.0.1:5000/callback"
     data = {
         'code': code,
         'redirect_uri': redirect_uri,
@@ -66,7 +67,6 @@ def callback():
 def login():
     state = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
     scope = "user-read-private user-read-email"
-    redirect_uri = "http://127.0.0.1:5000/callback"
     link = 'https://accounts.spotify.com/authorize?'
     auth_url = link + urlencode({
         'response_type': 'code',
