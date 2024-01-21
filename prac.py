@@ -37,7 +37,7 @@ def getProfile(accessToken):
     
 @app.route('/')
 def index():
-    redirect('/login')
+    return redirect('/login')
 
 @app.route('/callback')
 def callback():
@@ -123,17 +123,8 @@ def artist_top_tracks(token, id):
     return json_result
 
     
-
-def main():
-    token = get_token()
-    # artist = get_artist(token, "Circa Survive")
-    # artist_id = artist['id']
-    # print(get_artist_name(token, artist_id))
-    # songs = artist_top_tracks(token, artist_id)
-    # for idx, song in enumerate(songs):
-    #     print(f"{idx+1}. {song['name']}")
-    # get_user(token)
-    
+if __name__ == "__main__":
+    app.run(debug=False, host='0.0.0.0')
     
 
 '''
