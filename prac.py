@@ -24,8 +24,8 @@ load_dotenv()
 client_id = os.getenv("CLIENT_ID")
 client_secret = os.getenv("CLIENT_SECRET")
 print(client_id,client_secret)
-redirect_uri = "http://127.0.0.1:5000/callback"
-# redirect_uri = "https://kexin76.github.io/Spotify-API-testing/callback"
+# redirect_uri = "http://127.0.0.1:5000/callback"
+redirect_uri = "https://kexin76.github.io/Spotify-API-testing/callback"
 
 def getProfile(accessToken):
     headers = get_auth_token(accessToken)
@@ -35,7 +35,7 @@ def getProfile(accessToken):
     return json.loads(result.content)
     # return result.content
     
-@app.route('/')
+@app.route('/Spotify-API-testing/')
 def index():
     return redirect('/login')
 
@@ -63,7 +63,7 @@ def callback():
     
     
 
-@app.route("/login")
+@app.route("/Spotify-API-testing/login")
 def login():
     state = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
     scope = "user-read-private user-read-email"
