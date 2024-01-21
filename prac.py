@@ -35,9 +35,9 @@ def getProfile(accessToken):
     return json.loads(result.content)
     # return result.content
     
-@app.route('/')
+@app.route('/Spotify-API-testing/')
 def index():
-    redirect('/login')
+    redirect('/Spotify-API-testing/login')
 
 @app.route('/callback')
 def callback():
@@ -63,7 +63,7 @@ def callback():
     
     
 
-@app.route("/login")
+@app.route("/Spotify-API-testing/login")
 def login():
     state = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
     scope = "user-read-private user-read-email"
