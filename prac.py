@@ -24,8 +24,8 @@ load_dotenv()
 client_id = os.getenv("CLIENT_ID")
 client_secret = os.getenv("CLIENT_SECRET")
 print(client_id,client_secret)
-redirect_uri = "http://127.0.0.1:5000/callback"
-# redirect_uri = "https://kexin76.github.io/Spotify-API-testing/callback"
+# redirect_uri = "http://127.0.0.1:5000/callback"
+redirect_uri = "https://kexin76.github.io/Spotify-API-testing/callback"
 
 def getProfile(accessToken):
     headers = get_auth_token(accessToken)
