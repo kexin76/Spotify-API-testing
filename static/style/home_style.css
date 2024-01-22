@@ -1,0 +1,50 @@
+*{
+  margin: 0;  
+  padding: 0;
+  text-decoration: none;
+  list-style: none;
+  box-sizing: border-box;
+  font-family: Verdana, sans-serif;
+  
+}
+nav{
+    background: grey;
+    width: 100%;
+    height: 70px;
+}
+
+label.home{
+    padding: 30px 30px;
+    font-size: 35px;
+    font-weight: bold;
+    line-height: 70px;
+    padding: 0px 40px;
+}
+label.home a{
+    color: black;
+}
+nav ul{
+    float: right;
+    line-height:70px;
+}
+nav ul li{
+    display: inline-block;
+    padding: 0 40px;
+    margin: 0 5px;
+}
+nav ul li a{
+    color:navy;
+}
+
+.login{
+    background: green;
+    color:whitesmoke;
+    border-radius: 20px;
+    padding: 15px 30px;
+    font-size: 17px;
+    font-weight:600;
+}
+
+body{
+    background-color: lightslategrey;
+}

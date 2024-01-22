@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 import os
 import base64
-from flask import Flask, url_for, session, redirect, request
+from flask import Flask, url_for,redirect, request, session, render_template
 from requests import post, get
 import json
 import random
@@ -25,7 +25,6 @@ client_id = os.getenv("CLIENT_ID")
 client_secret = os.getenv("CLIENT_SECRET")
 print(client_id,client_secret)
 redirect_uri = "http://127.0.0.1:5000/callback"
-# redirect_uri = "https://kexin76.github.io/Spotify-API-testing/callback"
 
 def getProfile(accessToken):
     headers = get_auth_token(accessToken)
@@ -37,7 +36,7 @@ def getProfile(accessToken):
     
 @app.route('/')
 def index():
-    return redirect('/login')
+    return render_template("home.html")
 
 @app.route('/callback')
 def callback():
@@ -59,7 +58,7 @@ def callback():
     result = post(url, headers=headers, data=data)
     access_token = json.loads(result.content)["access_token"]
     profile = getProfile(access_token)
-    return profile
+    return render_template('home.html', name=profile["display_name"])
     
     
 
@@ -76,7 +75,6 @@ def login():
         'show_dialog': True,
         'state': state
     })
-    print(auth_url)
     return redirect(auth_url)
     
 
@@ -124,7 +122,7 @@ def artist_top_tracks(token, id):
 
     
 if __name__ == "__main__":
-    app.run(debug=False, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0')
     
 
 '''
