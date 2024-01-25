@@ -18,13 +18,15 @@ http://127.0.0.1:5000
 http://127.0.0.1:5000/login
 '''
 app = Flask(__name__)
+app.secret_key = "kevin"
 load_dotenv()
 
 
-client_id = os.getenv("CLIENT_ID")
-client_secret = os.getenv("CLIENT_SECRET")
-print(client_id,client_secret)
-redirect_uri = "http://127.0.0.1:5000/callback"
+CLIENT_ID = os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+AUTH_BASE64 = str(base64.b64encode((CLIENT_ID+":"+CLIENT_SECRET).encode("utf-8")), "utf-8")
+print(CLIENT_ID,CLIENT_SECRET)
+REDIRECT_URI = "http://127.0.0.1:5000/callback"
 
 def getProfile(accessToken):
     headers = get_auth_token(accessToken)
@@ -38,25 +40,40 @@ def getProfile(accessToken):
 def index():
     return render_template("home.html")
 
+@app.route('/tracks')
+def tracks():
+    
+    access_token = session.get("access_token")
+    
+    headers = get_auth_token(access_token)
+    
+    url = 'https://api.spotify.com/v1/me/following?type=artist&limit=10'
+    result = get(url, headers=headers)
+    fresh = get_refresh_token()
+    return render_template('tracks.html', smt=fresh)
+    # tracks = json.loads(result.content)
+    print(json.loads(result.content))
+    return result.content
+    return render_template('tracks.html')
+
 @app.route('/callback')
 def callback():
     code = request.args["code"]
     state = request.args["state"]
-    auth_string = client_id+":"+client_secret
-    auth_bytes = auth_string.encode("utf-8")
-    auth_base64 = str(base64.b64encode(auth_bytes), "utf-8")
     url = 'https://accounts.spotify.com/api/token'
     headers = {
-        'Authorization': 'Basic ' + auth_base64,
+        'Authorization': 'Basic ' + AUTH_BASE64,
         'Content-Type': "application/x-www-form-urlencoded"
     }
     data = {
         'code': code,
-        'redirect_uri': redirect_uri,
+        'redirect_uri': REDIRECT_URI,
         'grant_type': 'authorization_code'
         }
     result = post(url, headers=headers, data=data)
     access_token = json.loads(result.content)["access_token"]
+    session["access_token"] = access_token
+    session["refresh_token"] = get_auth_token(access_token)
     profile = getProfile(access_token)
     return render_template('home.html', name=profile["display_name"])
     
@@ -69,57 +86,34 @@ def login():
     link = 'https://accounts.spotify.com/authorize?'
     auth_url = link + urlencode({
         'response_type': 'code',
-        'client_id' : client_id,
-        'redirect_uri': redirect_uri,
+        'client_id' : CLIENT_ID,
+        'redirect_uri': REDIRECT_URI,
         'scope': scope,
-        'show_dialog': True,
+        # 'show_dialog': True,
         'state': state
     })
     return redirect(auth_url)
     
-
-def get_token():
-    auth_string = client_id+":"+client_secret
-    auth_bytes = auth_string.encode("utf-8")
-    auth_base64 = str(base64.b64encode(auth_bytes), "utf-8")
-    url = 'https://accounts.spotify.com/api/token'
-    headers = {
-        'Authorization': 'Basic ' + auth_base64,
-        'Content-Type': "application/x-www-form-urlencoded"
-    }
-    data = {'grant_type': 'client_credentials'}
-    result = post(url,headers=headers, data=data)
-    list = json.loads(result.content)
-    token = list["access_token"]
-    return token
-
 def get_auth_token(token): # get(url, headers=headers) where header is auth_token(token)
     auth_token = {'Authorization': 'Bearer ' + token}
     return auth_token
 
-def get_artist(token, name):
-    headers = get_auth_token(token)
-    url = f"https://api.spotify.com/v1/search"
-    query = f"?q={name}&type=artist&market=US&limit=1"
-    query_url = url+query
-    result = get(query_url,headers=headers)
-    json_result = json.loads(result.content)["artists"]["items"]
-    return json_result[0]
-
-def get_artist_name(token, id):
-    headers = get_auth_token(token)
-    url = f"https://api.spotify.com/v1/artists/{id}"
-    result = get(url, headers=headers)
-    json_result = json.loads(result.content)["name"]
+def get_refresh_token():
+    refreshToken = session.get("refresh_token")
+    url = "https://accounts.spotify.com/api/token"
+    headers = {
+        'Authorization': 'Basic ' + AUTH_BASE64,
+        'Content-Type': 'application/x-www-form-urlencoded'}
+    data ={
+        "grant_type": 'refresh_token',
+        "refresh_token": get_auth_token(session.get("access_token")),
+        "client_id": CLIENT_ID
+    }
+    result = post(url, headers=headers, data=data)
+    return result.content
+    json_result = json.loads(result.content)
     return json_result
-
-def artist_top_tracks(token, id):
-    headers = get_auth_token(token)
-    url = f"https://api.spotify.com/v1/artists/{id}/top-tracks?market=US"
-    result = get(url, headers=headers)
-    json_result = json.loads(result.content)["tracks"]
-    return json_result
-
+    
     
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
