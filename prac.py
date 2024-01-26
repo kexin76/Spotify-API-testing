@@ -34,7 +34,6 @@ def getProfile(accessToken):
     result = get(url, headers=headers)
     
     return json.loads(result.content)
-    # return result.content
     
 @app.route('/')
 def index():
@@ -106,8 +105,6 @@ def get_refresh_token():
     }
     result = post(url, headers=headers, data=data)
     return result.content
-    json_result = json.loads(result.content)
-    return json_result
     
     
 if __name__ == "__main__":
