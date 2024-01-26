@@ -18,10 +18,10 @@ http://127.0.0.1:5000
 http://127.0.0.1:5000/login
 '''
 app = Flask(__name__)
-app.secret_key = "kevin"
 load_dotenv()
 
-
+APP_SECRET_KEY = os.getenv("APP_SECRET_KEY")
+app.secret_key = APP_SECRET_KEY
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 AUTH_BASE64 = str(base64.b64encode((CLIENT_ID+":"+CLIENT_SECRET).encode("utf-8")), "utf-8")
@@ -42,19 +42,14 @@ def index():
 
 @app.route('/tracks')
 def tracks():
-    
     access_token = session.get("access_token")
-    
     headers = get_auth_token(access_token)
-    
-    url = 'https://api.spotify.com/v1/me/following?type=artist&limit=10'
+    url = 'https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=10'
     result = get(url, headers=headers)
-    fresh = get_refresh_token()
-    return render_template('tracks.html', smt=fresh)
-    # tracks = json.loads(result.content)
-    print(json.loads(result.content))
-    return result.content
-    return render_template('tracks.html')
+    json_result = enumerate(json.loads(result.content)["items"])
+    # for idx, track in json_result:
+    #     print(f"{idx+1}. {track['name']} by {track['artists'][0]['name']}")
+    return render_template('tracks.html', result=json_result)
 
 @app.route('/callback')
 def callback():
@@ -73,7 +68,7 @@ def callback():
     result = post(url, headers=headers, data=data)
     access_token = json.loads(result.content)["access_token"]
     session["access_token"] = access_token
-    session["refresh_token"] = get_auth_token(access_token)
+    # session["refresh_token"] = get_auth_token(access_token)
     profile = getProfile(access_token)
     return render_template('home.html', name=profile["display_name"])
     
@@ -82,7 +77,7 @@ def callback():
 @app.route("/login")
 def login():
     state = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
-    scope = "user-read-private user-read-email"
+    scope = "user-read-private user-read-email user-top-read user-follow-read"
     link = 'https://accounts.spotify.com/authorize?'
     auth_url = link + urlencode({
         'response_type': 'code',
@@ -118,15 +113,3 @@ def get_refresh_token():
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
     
-
-'''
-Lines 11-13
-
-In summary, this code is creating a base64-encoded string that 
-represents the combination of client_id and client_secret in a 
-specific format. This string is often used for HTTP Basic 
-Authentication when making requests to APIs that 
-require authentication using client credentials. 
-The resulting auth_base64 can be used as the value for the
-Authorization header in an HTTP request.
-'''

@@ -3,10 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/style/home_style.css">
     <link rel="stylesheet" href="static/style/tracks_style.css">
     <title>TRACKS</title>
 </head>
 <body>
-    <h1>{{smt}}</h1>
+    <nav>
+        <label class="home"><a href="/">Home</a></label>
+        <ul class="navLinks">
+            <li><a href="/tracks">Tracks</a></li>
+            <li><a class="login" href="/login">Sign In</a></li>
+        </ul>
+    </nav>
+    <ol>
+        {% for idx, track in result %}
+        <li>
+            <a href='{{track["href"]}}'></a>{{idx+1}}. {{track["name"]}} by {{track['artists'][0]['name']}}
+        </li>
+        {% endfor %}
+    </ol>
+    
 </body>
 </html>
