@@ -15,8 +15,9 @@ http://127.0.0.1:5000
 app = Flask(__name__)
 load_dotenv()
 
-APP_SECRET_KEY = os.getenv("APP_SECRET_KEY")
-app.secret_key = APP_SECRET_KEY
+# APP_SECRET_KEY = os.getenv("APP_SECRET_KEY")
+# app.secret_key = APP_SECRET_KEY
+app.secret_key = "kevin"
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 AUTH_BASE64 = str(base64.b64encode((str(CLIENT_ID)+":"+str(CLIENT_SECRET)).encode("utf-8")), "utf-8")
