@@ -15,13 +15,16 @@
             <li><a class="login" href="/login">Sign In</a></li>
         </ul>
     </nav>
-    <ol>
+        <ol>
         {% for idx, track in result %}
         <li>
-            <a href='{{track["href"]}}'></a>{{idx+1}}. {{track["name"]}} by {{track['artists'][0]['name']}}
+            {{idx+1}}. 
+            <a class="track" href="{{track['external_urls']['spotify']}}">{{track["name"]}}</a> by 
+            <a class="artist" href="{{track['artists'][0]['external_urls']['spotify']}}">{{track['artists'][0]['name']}}</a>
         </li>
         {% endfor %}
-    </ol>
+        </ol>
+    
     
 </body>
 </html>
