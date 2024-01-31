@@ -4,16 +4,18 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="static/style/home_style.css">
+        <link rel="icon" href="/static/images/spicon.webp" type="image/webp">
         <title>Home page</title>
     </head>
     <body>
         <nav>
             <label class="home"><a href="/">Home</a></label>
             <ul class="navLinks">
-                <li><a href="/tracks">Tracks</a></li>
-                <li><a class="login" href="/login">Sign In</a></li>
+                <li><button class="tracks" id="tracksb"><a href="/tracks">Tracks</a></li></button>
+                <li><button class="login" id="loginb"><a href="/login">Sign In</a></button></li>
             </ul>
         </nav>
         <h1>{{name}}</h1>
     </body>
 </html>
+

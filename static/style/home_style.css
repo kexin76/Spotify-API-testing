@@ -1,3 +1,10 @@
+/* 
+ SP BLACK - 191414
+ SP GREEN - 1DB954
+ D CYAN - #0088a9
+*/
+
+
 *{
   margin: 0;  
   padding: 0;
@@ -37,12 +44,40 @@ nav ul li a{
 }
 
 .login{
-    background: green;
     color:whitesmoke;
-    border-radius: 20px;
-    padding: 15px 30px;
     font-size: 17px;
     font-weight:600;
+    transition: all 0.3s ease 0s;
+    text-decoration: none;
+}
+
+.login:hover{
+    color: #0088a9;
+}
+
+#loginb{
+    border-radius: 17px;
+    padding: 10px 25px;
+    font-size: 15px;
+    font-weight:600;
+    transition: all 0.3s ease 0s;
+    background-color: #1DB954;
+}
+
+#loginb:hover{
+    background-color: #156e34;
+}
+
+.tracks{
+    color:whitesmoke;
+    font-weight: 300px;
+    transition: all 0.3s ease 0s;
+    text-decoration: none;
+}
+
+#tracksb{
+    border-radius: 15px;
+    padding: 6px 20px;
 }
 
 body{
