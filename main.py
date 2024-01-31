@@ -68,13 +68,14 @@ def callback():
         "code_verifier": codeVerifier,
         }
     result = post(url, headers=headers, data=data)
+    if result.status_code == 200:
+        json_result = json.loads(result.content)
+        session["access_token"] = json_result["access_token"]
+        session["refresh_token"] = json_result["refresh_token"]
+        profile = getProfile()
+        return render_template('home.html', name=profile["display_name"])
     json_result = json.loads(result.content)
     return render_template('home.html', name=result.content)
-    # session["access_token"] = json_result["access_token"]
-    # session["refresh_token"] = json_result["refresh_token"]
-    # profile = getProfile()
-    # return render_template('home.html', name=profile["display_name"])
-    
 
 @app.route('/tracks')
 def tracks():
